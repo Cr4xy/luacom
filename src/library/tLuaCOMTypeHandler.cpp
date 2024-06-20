@@ -248,6 +248,23 @@ void tLuaCOMTypeHandler::com2lua(lua_State* L, VARIANTARG varg_orig, bool is_var
             lua_pushnumber(L, date.wMilliseconds);
             lua_settable(L, -3);
           }
+          else if (strcmp("string_ms_accurate", dateformat) == 0)
+          {
+              SYSTEMTIME date;
+              tUtil::VariantTimeToSystemTimeWithMilliseconds(varg.date, &date);
+
+              char szBuf[20] = { 0 };
+
+              GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &date, NULL, szBuf, sizeof(szBuf));
+
+              int iBufUsed = strlen(szBuf);
+              if (iBufUsed < sizeof(szBuf) - 2)
+                  szBuf[iBufUsed++] = ' ';
+
+              GetTimeFormat(LOCALE_USER_DEFAULT, 0, &date, NULL, szBuf + iBufUsed, sizeof(szBuf) - iBufUsed);
+
+              lua_pushstring(L, tStringBuffer(szBuf));
+          }
 
           break;
         }

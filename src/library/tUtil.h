@@ -26,6 +26,8 @@ public:
   static bool IsValidString(LPCTSTR string);
   static void RegistrySetString(lua_State* L, const char& Key, const char* value);
   static tStringBuffer RegistryGetString(lua_State* L, const char& Key);
+  static BOOL tUtil::VariantTimeToSystemTimeWithMilliseconds(/*input*/ double dVariantTime, /*output*/SYSTEMTIME* st);
+  static BOOL tUtil::SystemTimeToVariantTimeWithMilliseconds(/*input*/ SYSTEMTIME st, /*output*/double* dVariantTime);
 
   static FILE* log_file;
 };
