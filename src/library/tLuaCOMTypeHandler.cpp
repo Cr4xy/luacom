@@ -327,10 +327,16 @@ void tLuaCOMTypeHandler::com2lua(lua_State* L, VARIANTARG varg_orig, bool is_var
 
           IUnknown* pProxMgr;
           ILuaDispatch *pLuaDispatch;
-          if((pdisp->QueryInterface(IID_IProxyManager, (void**)&pProxMgr)==E_NOINTERFACE) &&
-              SUCCEEDED(pdisp->QueryInterface(IID_ILuaDispatch, (void**)&pLuaDispatch)) &&
-              SUCCEEDED(pLuaDispatch->PushIfSameState(L)))
-            break;
+          if ((pdisp->QueryInterface(IID_IProxyManager, (void**)&pProxMgr) == E_NOINTERFACE)) {
+              if (SUCCEEDED(pdisp->QueryInterface(IID_ILuaDispatch, (void**)&pLuaDispatch))) {
+                  pdisp->Release();
+                  if (SUCCEEDED(pLuaDispatch->PushIfSameState(L))) {
+                      break;
+                  }
+              }
+          } else {
+              pdisp->Release();
+          }
 
           tLuaCOM* lcom = NULL;
 
