@@ -380,8 +380,15 @@ int tLuaCOM::call(lua_State* L,
 
      if(hr == DISP_E_EXCEPTION) // excecoes
      {
-       if(excepinfo.bstrDescription != NULL)
-         COM_EXCEPTION(tUtil::bstr2string(excepinfo.bstrDescription));
+       if (excepinfo.bstrSource != NULL)
+         SysFreeString(excepinfo.bstrSource);
+       if (excepinfo.bstrHelpFile != NULL)
+         SysFreeString(excepinfo.bstrHelpFile);
+       if (excepinfo.bstrDescription != NULL) {
+         tStringBuffer buf = tUtil::bstr2string(excepinfo.bstrDescription);
+         SysFreeString(excepinfo.bstrDescription);
+         COM_EXCEPTION(buf);
+       }
        else if(excepinfo.wCode != 0)
          COM_EXCEPTION(tUtil::GetErrorMessage(excepinfo.wCode));
        else if(excepinfo.scode != 0)
