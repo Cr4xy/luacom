@@ -26,9 +26,9 @@ extern "C"
 // - while Cygwin default convert filename internally to UTF-8
 // - we have to use ASCII format for our lua source code, if you prefer UTF-8, you need luaiconv to convert UTF-8 to your ASCII format (GBK or other)
 #ifdef __CYGWIN__
-UINT code_page=CP_UTF8; // By default, Cygwin internally convert filename to UTF-8
+__declspec(thread) UINT code_page=CP_UTF8; // By default, Cygwin internally convert filename to UTF-8
 #else
-UINT code_page=CP_ACP;
+__declspec(thread) UINT code_page=CP_ACP;
 #endif
 
 FILE* tUtil::log_file = NULL;
