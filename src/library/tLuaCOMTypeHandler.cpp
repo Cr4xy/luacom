@@ -402,6 +402,35 @@ void tLuaCOMTypeHandler::com2lua(lua_State* L, VARIANTARG varg_orig, bool is_var
           pushIUnknown(L, varg.punkVal);
           break;
         }
+      case VT_RECORD:
+        {
+          lua_newtable(L);
+          IRecordInfo& ri = *varg.pRecInfo;
+          ULONG pcNames;
+          HRESULT hr;
+          hr = ri.GetFieldNames(&pcNames, NULL);
+          if(SUCCEEDED(hr))
+          {
+            BSTR* strNames = new BSTR[pcNames];
+            hr = ri.GetFieldNames(&pcNames, strNames);
+            if(SUCCEEDED(hr))
+            {
+              for (unsigned int i = 0; i < pcNames; i++) {
+                VARIANT var = { 0 };
+                hr = ri.GetField(varg.pvRecord, strNames[i], &var);
+                if(SUCCEEDED(hr))
+                {
+                  lua_pushstring(L, tUtil::bstr2string(strNames[i]));
+                  com2lua(L, var, true);
+                  lua_settable(L, -3);
+                }
+                SysFreeString(strNames[i]);
+              }
+            }
+            delete[] strNames;
+          }
+          break;
+        }
 
       default:
         {
