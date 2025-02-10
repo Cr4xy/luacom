@@ -184,11 +184,13 @@ void tLuaCOMTypeHandler::com2lua(lua_State* L, VARIANTARG varg_orig, bool is_var
       case VT_UI1:
       case VT_UI2:
       case VT_UI4:
+      case VT_UI8:
       case VT_INT:
       case VT_UINT:
       case VT_I1:
       case VT_I2:
       case VT_I4:
+      case VT_I8:
       case VT_R4:
       case VT_DECIMAL:
       case VT_R8:
